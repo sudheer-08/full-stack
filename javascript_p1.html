@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Character Counter</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800 text-center">Live Character Counter</h1>
+        
+        <!-- Textarea for user input -->
+        <textarea id="my-textarea" 
+            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-gray-700" 
+            placeholder="Start typing here..."
+        ></textarea>
+        
+        <!-- Character counter display -->
+        <div class="mt-2 text-right text-sm text-gray-600">
+            Characters: <span id="char-count" class="font-semibold text-blue-600">0</span>
+        </div>
+    </div>
+
+    <script>
+        // Get the textarea and the counter elements
+        const textarea = document.getElementById('my-textarea');
+        const charCountDisplay = document.getElementById('char-count');
+
+        // Function to update the character count
+        function updateCounter() {
+            const text = textarea.value;
+            const characterCount = text.length;
+            charCountDisplay.textContent = characterCount;
+        }
+
+        // Add an event listener to update the count on every input
+        textarea.addEventListener('input', updateCounter);
+
+        // Run the update function once on page load to initialize the count
+        // in case the textarea has pre-filled content.
+        document.addEventListener('DOMContentLoaded', updateCounter);
+    </script>
+</body>
+</html>
