@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Product Filter</title>
+    <!-- Tailwind CSS for a clean, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 flex justify-center">
+    <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800 text-center">Product List</h1>
+        
+        <!-- Filter dropdown menu -->
+        <div class="mb-4 flex items-center justify-between">
+            <label for="category-filter" class="text-gray-700 font-medium">Filter by Category:</label>
+            <select id="category-filter" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                <option value="all">All</option>
+                <option value="clothing">Clothing</option>
+                <option value="electronics">Electronics</option>
+                <option value="books">Books</option>
+            </select>
+        </div>
+
+        <!-- Product list container -->
+        <div id="product-list" class="space-y-3">
+            <!-- Products will be rendered here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Array of product data, including a category for each item.
+        const products = [
+            { name: "T-Shirt", category: "clothing" },
+            { name: "Jeans", category: "clothing" },
+            { name: "Headphones", category: "electronics" },
+            { name: "Smartphone", category: "electronics" },
+            { name: "Novel", category: "books" },
+            { name: "Cookbook", category: "books" },
+        ];
+
+        // Get the DOM elements
+        const filterDropdown = document.getElementById('category-filter');
+        const productListContainer = document.getElementById('product-list');
+
+        // Function to render the product list based on a given array
+        function renderProducts(productArray) {
+            productListContainer.innerHTML = ''; // Clear previous products
+            
+            productArray.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'bg-gray-50 p-4 rounded-md border border-gray-200 text-gray-800';
+                productDiv.textContent = product.name;
+                productListContainer.appendChild(productDiv);
+            });
+        }
+
+        // Function to handle the filter change event
+        function handleFilterChange(event) {
+            const selectedCategory = event.target.value;
+
+            if (selectedCategory === 'all') {
+                // If "All" is selected, render all products
+                renderProducts(products);
+            } else {
+                // Otherwise, filter the products by the selected category
+                const filteredProducts = products.filter(product => product.category === selectedCategory);
+                renderProducts(filteredProducts);
+            }
+        }
+
+        // Add the event listener to the dropdown
+        filterDropdown.addEventListener('change', handleFilterChange);
+
+        // Initial render of all products when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+        });
+    </script>
+</body>
+</html>
