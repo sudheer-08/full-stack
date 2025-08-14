@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive SVG Drawing Tool</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style the SVG canvas with a visible border */
+        svg {
+            border: 2px solid #ccc;
+            cursor: crosshair; /* Change cursor to indicate drawing */
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-4xl bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800 text-center">SVG Drawing Tool</h1>
+        
+        <!-- The SVG canvas where drawing will happen -->
+        <svg id="drawing-canvas" width="100%" height="500"></svg>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('drawing-canvas');
+        let isDrawing = false;
+        let currentPath = null;
+        let pathPoints = [];
+
+        // Function to start a new drawing path on mouse down
+        function handleMouseDown(e) {
+            isDrawing = true;
+            // Get the mouse coordinates relative to the SVG canvas
+            const point = getSvgCoordinates(e);
+
+            // Create a new SVG 'path' element
+            currentPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            // Set initial styling for the path
+            currentPath.setAttribute('stroke', '#3b82f6'); // Tailwind's blue-500
+            currentPath.setAttribute('stroke-width', '4');
+            currentPath.setAttribute('fill', 'none');
+            currentPath.setAttribute('stroke-linecap', 'round');
+            currentPath.setAttribute('stroke-linejoin', 'round');
+
+            // Start the path at the initial mouse position
+            pathPoints = [`M${point.x},${point.y}`];
+            currentPath.setAttribute('d', pathPoints.join(' '));
+
+            // Add the new path to the canvas
+            canvas.appendChild(currentPath);
+        }
+
+        // Function to draw as the mouse moves
+        function handleMouseMove(e) {
+            if (!isDrawing) return;
+
+            // Get the current mouse coordinates
+            const point = getSvgCoordinates(e);
+            
+            // Add a new line segment to the path
+            pathPoints.push(`L${point.x},${point.y}`);
+            currentPath.setAttribute('d', pathPoints.join(' '));
+        }
+
+        // Function to stop drawing on mouse up
+        function handleMouseUp() {
+            isDrawing = false;
+            currentPath = null;
+        }
+
+        // Helper function to get mouse coordinates relative to the SVG canvas
+        function getSvgCoordinates(event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top
+            };
+        }
+
+        // Add event listeners to the canvas for drawing
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        // Also stop drawing if the mouse leaves the canvas
+        canvas.addEventListener('mouseleave', handleMouseUp);
+    </script>
+</body>
+</html>
